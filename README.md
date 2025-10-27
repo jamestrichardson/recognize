@@ -9,6 +9,25 @@ A Flask-based web application for performing object detection and facial recogni
 - **Video Processing**: Process video files frame-by-frame for comprehensive analysis
 - **REST API**: Well-documented API endpoints for integration
 - **Web Interface**: User-friendly web interface for file uploads and results viewing
+- **Scalable Architecture**: Separate worker containers for distributed processing (optional)
+- **Async Task Queue**: Handle high load with Celery and Redis
+
+## Architecture Modes
+
+### 1. Simple Mode (Default)
+- Single container deployment
+- Synchronous processing
+- Good for: Development, low traffic, quick setup
+
+### 2. Scalable Mode (Production)
+- Multiple service containers (web, redis, face workers, object workers)
+- Asynchronous task processing with Celery
+- Independent scaling of face/object detection workers
+- Good for: Production, high traffic, compute-intensive workloads
+
+📖 **See [SCALABLE_ARCHITECTURE.md](SCALABLE_ARCHITECTURE.md) for detailed architecture guide**
+
+🚀 **See [QUICKSTART_SCALABLE.md](QUICKSTART_SCALABLE.md) for quick setup instructions**
 
 ## Project Structure
 
