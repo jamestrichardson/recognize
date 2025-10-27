@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recognize - Object and Facial Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Recognize</h1>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/upload">Upload</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="hero">
+            <h2>Object and Facial Recognition</h2>
+            <p>Upload images or videos to detect objects and faces using advanced computer vision algorithms.</p>
+            <a href="/upload" class="btn btn-primary">Get Started</a>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="icon">👤</div>
+                <h3>Face Detection</h3>
+                <p>Detect and locate faces in images and videos with high accuracy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🎯</div>
+                <h3>Object Recognition</h3>
+                <p>Identify and classify objects in your media files using YOLO models.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🎥</div>
+                <h3>Video Processing</h3>
+                <p>Process video files frame-by-frame for comprehensive analysis.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📊</div>
+                <h3>Detailed Results</h3>
+                <p>Get annotated outputs with bounding boxes and confidence scores.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Recognize. Built with Flask and OpenCV.</p>
+        </div>
+    </footer>
+</body>
+</html>

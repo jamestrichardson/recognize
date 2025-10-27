@@ -1,0 +1,4 @@
+# Placeholder for models directory
+# Place your model files here:
+# - haarcascade_frontalface_default.xml (for face detection)
+# - yolov3.weights, yolov3.cfg, coco.names (for object detection)

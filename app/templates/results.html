@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Recognize</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Recognize</h1>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/upload">Upload</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="results-page">
+            <h2>Detection Results</h2>
+            <div id="results-content">
+                <p>Loading results for: {{ filename }}</p>
+            </div>
+            <a href="/upload" class="btn btn-secondary">Upload Another File</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Recognize. Built with Flask and OpenCV.</p>
+        </div>
+    </footer>
+</body>
+</html>
