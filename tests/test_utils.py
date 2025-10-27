@@ -1,8 +1,10 @@
 """
 Tests for utility modules
 """
-import pytest
 from pathlib import Path
+
+import pytest
+
 from app.utils import FileHandler, ResponseHandler
 
 

@@ -5,18 +5,22 @@ This directory contains asynchronous task definitions for distributed processing
 ## Task Modules
 
 ### `face_tasks.py`
+
 Face detection tasks that run on dedicated face detection workers.
 
 **Tasks:**
+
 - `detect_faces_in_image_task(image_path)` - Detect faces in a single image
 - `detect_faces_in_video_task(video_path, frame_skip)` - Detect faces in video
 
 **Queue:** `face_detection`
 
 ### `object_tasks.py`
+
 Object detection tasks that run on dedicated object detection workers.
 
 **Tasks:**
+
 - `detect_objects_in_image_task(image_path)` - Detect objects in a single image
 - `detect_objects_in_video_task(video_path, frame_skip)` - Detect objects in video
 
@@ -32,11 +36,12 @@ task_routes = {
     'app.tasks.face_tasks.*': {'queue': 'face_detection'},
     'app.tasks.object_tasks.*': {'queue': 'object_detection'},
 }
-```
+```text
 
 ## Usage
 
 ### From Routes
+
 ```python
 from app.tasks import detect_faces_in_image_task
 
@@ -50,9 +55,10 @@ task_id = result.id
 from celery.result import AsyncResult
 task = AsyncResult(task_id)
 status = task.state
-```
+```text
 
 ### From Python Shell
+
 ```python
 from app.tasks import detect_objects_in_video_task
 
@@ -64,7 +70,7 @@ task.ready()
 
 # Get result (blocks until complete)
 result = task.get()
-```
+```text
 
 ## Task States
 
@@ -83,10 +89,11 @@ result = task.get()
 4. Queue with `.apply_async()` or `.delay()`
 
 Example:
+
 ```python
 @celery_app.task(bind=True, name='app.tasks.face_tasks.new_task')
 def new_face_task(self, param1, param2):
     self.update_state(state='PROCESSING', meta={'status': 'Starting...'})
     # Your code here
     return result
-```
+```text

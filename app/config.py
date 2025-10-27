@@ -3,6 +3,7 @@ Configuration settings for the Recognize application
 """
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -28,8 +29,10 @@ class Config:
 
     # Model paths
     MODELS_DIR = os.getenv('MODELS_DIR', str(BASE_DIR / 'models'))
-    FACE_CASCADE_PATH = os.getenv('FACE_CASCADE_PATH',
-                                   str(Path(MODELS_DIR) / 'haarcascade_frontalface_default.xml'))
+    FACE_CASCADE_PATH = os.getenv(
+        'FACE_CASCADE_PATH',
+        str(Path(MODELS_DIR) / 'haarcascade_frontalface_default.xml')
+    )
     YOLO_WEIGHTS_PATH = os.getenv('YOLO_WEIGHTS_PATH', str(Path(MODELS_DIR) / 'yolov3.weights'))
     YOLO_CONFIG_PATH = os.getenv('YOLO_CONFIG_PATH', str(Path(MODELS_DIR) / 'yolov3.cfg'))
     YOLO_NAMES_PATH = os.getenv('YOLO_NAMES_PATH', str(Path(MODELS_DIR) / 'coco.names'))

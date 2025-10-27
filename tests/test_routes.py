@@ -2,6 +2,7 @@
 Tests for Flask application routes
 """
 import pytest
+
 from app import create_app
 from app.config import TestingConfig
 

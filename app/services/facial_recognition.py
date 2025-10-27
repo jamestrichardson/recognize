@@ -2,10 +2,10 @@
 Facial Recognition Service
 Handles face detection and recognition in images and videos
 """
-import cv2
-import numpy as np
-from pathlib import Path
 import logging
+from pathlib import Path
+
+import cv2
 
 logger = logging.getLogger(__name__)
 
@@ -68,8 +68,10 @@ class FacialRecognitionService:
             face_data = []
             for i, (x, y, w, h) in enumerate(faces):
                 cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                cv2.putText(image, f'Face {i+1}', (x, y-10),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.putText(
+                    image, f'Face {i+1}', (x, y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2
+                )
 
                 face_data.append({
                     'face_id': i + 1,

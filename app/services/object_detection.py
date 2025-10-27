@@ -2,10 +2,11 @@
 Object Detection Service
 Handles object detection in images and videos using YOLO or other models
 """
+import logging
+from pathlib import Path
+
 import cv2
 import numpy as np
-from pathlib import Path
-import logging
 
 logger = logging.getLogger(__name__)
 

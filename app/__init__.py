@@ -2,10 +2,12 @@
 Recognize - Object and Facial Recognition Application
 Flask application factory and initialization
 """
+import os
+
 from flask import Flask
 from flask_cors import CORS
+
 from .config import Config
-import os
 
 
 def create_app(config_class=Config):
@@ -29,7 +31,7 @@ def create_app(config_class=Config):
     os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
 
     # Register blueprints
-    from app.routes import main_bp, api_bp
+    from app.routes import api_bp, main_bp
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
 

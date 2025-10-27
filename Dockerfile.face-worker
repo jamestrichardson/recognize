@@ -17,11 +17,17 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+# Copy application code (see .dockerignore for exclusions)
+COPY app/ ./app/
+COPY run.py .
+COPY .env.example .
 
-# Create necessary directories
-RUN mkdir -p uploads models logs
+# Create necessary directories and add non-root user for security
+RUN mkdir -p uploads models logs && \
+    useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+
+USER appuser
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1

@@ -2,10 +2,11 @@
 Celery tasks for object detection processing
 These tasks run on dedicated object detection worker containers
 """
-from app.celery_app import celery_app
-from app.services import ObjectDetectionService
-from app.config import Config
 import logging
+
+from app.celery_app import celery_app
+from app.config import Config
+from app.services import ObjectDetectionService
 
 logger = logging.getLogger(__name__)
 

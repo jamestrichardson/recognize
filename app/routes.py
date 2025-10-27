@@ -1,10 +1,10 @@
 """
 Flask routes for the Recognize application
 """
-from flask import Blueprint, render_template, request, jsonify, send_from_directory, current_app
-from werkzeug.utils import secure_filename
-from pathlib import Path
 import logging
+
+from flask import Blueprint, current_app, render_template, request, send_from_directory
+
 from app.services import FacialRecognitionService, ObjectDetectionService
 from app.utils.file_handler import FileHandler
 from app.utils.response_handler import ResponseHandler
@@ -93,9 +93,12 @@ def detect_face_image():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_IMAGE_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_IMAGE_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_IMAGE_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
@@ -130,15 +133,22 @@ def detect_face_video():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_VIDEO_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_VIDEO_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_VIDEO_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
 
         # Get frame skip parameter
-        frame_skip = request.form.get('frame_skip', current_app.config.get('VIDEO_FRAME_SKIP', 5), type=int)
+        frame_skip = request.form.get(
+            'frame_skip',
+            current_app.config.get('VIDEO_FRAME_SKIP', 5),
+            type=int
+        )
 
         # Process video
         face_svc = get_face_service()
@@ -170,9 +180,12 @@ def detect_object_image():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_IMAGE_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_IMAGE_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_IMAGE_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
@@ -207,15 +220,22 @@ def detect_object_video():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_VIDEO_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_VIDEO_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_VIDEO_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
 
         # Get frame skip parameter
-        frame_skip = request.form.get('frame_skip', current_app.config.get('VIDEO_FRAME_SKIP', 5), type=int)
+        frame_skip = request.form.get(
+            'frame_skip',
+            current_app.config.get('VIDEO_FRAME_SKIP', 5),
+            type=int
+        )
 
         # Process video
         obj_svc = get_object_service()

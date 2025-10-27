@@ -7,12 +7,14 @@ I've implemented a complete **task queue architecture** using **Celery + Redis**
 ## Key Components Added
 
 ### 1. Task Queue System
+
 - **`app/celery_app.py`**: Celery configuration with queue routing
 - **`app/tasks/face_tasks.py`**: Async face detection tasks
 - **`app/tasks/object_tasks.py`**: Async object detection tasks
 - **`app/routes_async.py`**: Updated routes with async support
 
 ### 2. Docker Infrastructure
+
 - **`Dockerfile.face-worker`**: Face detection worker container
 - **`Dockerfile.object-worker`**: Object detection worker container
 - **`docker-compose.scalable.yml`**: Multi-service orchestration with:
@@ -23,17 +25,19 @@ I've implemented a complete **task queue architecture** using **Celery + Redis**
   - Flower monitoring dashboard
 
 ### 3. Helper Scripts
+
 - **`start_face_worker.sh`**: Local face worker startup
 - **`start_object_worker.sh`**: Local object worker startup
 
 ### 4. Documentation
+
 - **`SCALABLE_ARCHITECTURE.md`**: Complete architecture guide (15+ pages)
 - **`QUICKSTART_SCALABLE.md`**: Quick start guide
 - Updated **`README.md`** with architecture overview
 
 ## How It Works
 
-```
+```text
 ┌─────────┐
 │ Client  │
 └────┬────┘
@@ -56,7 +60,7 @@ I've implemented a complete **task queue architecture** using **Celery + Redis**
 │ Workers  │  │ Workers  │
 │ (2+)     │  │ (2+)     │
 └──────────┘  └──────────┘
-```
+```text
 
 ## Scaling Advantages
 
@@ -73,22 +77,27 @@ I've implemented a complete **task queue architecture** using **Celery + Redis**
 ## Deployment Options
 
 ### Option 1: Simple (No Changes Needed)
+
 ```bash
 docker-compose up
-```
+```text
+
 - Single container
 - Synchronous processing
 - Original routes still work
 
 ### Option 2: Scalable (New)
+
 ```bash
 docker-compose -f docker-compose.scalable.yml up --scale face-worker=5 --scale object-worker=3
-```
+```text
+
 - Multiple containers
 - Async processing
 - Independent scaling
 
 ### Option 3: Kubernetes (Production)
+
 - Auto-scaling based on load
 - Self-healing
 - Load balancing
@@ -97,13 +106,15 @@ docker-compose -f docker-compose.scalable.yml up --scale face-worker=5 --scale o
 ## API Changes
 
 ### Before (Synchronous)
+
 ```bash
 POST /api/detect/face/image
 → Waits 5-30 seconds
 → Returns complete results
-```
+```text
 
 ### After (Asynchronous)
+
 ```bash
 POST /api/detect/face/image
 → Returns immediately (task_id)
@@ -111,7 +122,7 @@ POST /api/detect/face/image
 GET /api/task/{task_id}
 → Check status
 → Get results when complete
-```
+```text
 
 ## Scaling Commands
 
@@ -124,11 +135,12 @@ docker-compose -f docker-compose.scalable.yml up --scale object-worker=5 -d
 
 # View monitoring dashboard
 open http://localhost:5555
-```
+```text
 
 ## Performance Benefits
 
 ### Throughput Example
+
 | Scenario | Simple Mode | Scalable Mode (5 workers each) |
 |----------|-------------|-------------------------------|
 | 100 image requests | ~10 min (serial) | ~2 min (parallel) |
@@ -136,6 +148,7 @@ open http://localhost:5555
 | Max concurrent | 1 | 10+ (scalable) |
 
 ### Cost Optimization
+
 - **Auto-scale**: Add workers during peak hours
 - **Scale-down**: Remove workers during off-hours
 - **Spot instances**: Use cheaper compute for workers
@@ -143,7 +156,8 @@ open http://localhost:5555
 
 ## Monitoring
 
-Access Flower dashboard at http://localhost:5555 to view:
+Access Flower dashboard at <http://localhost:5555> to view:
+
 - ✅ Task status (queued, processing, completed)
 - ✅ Worker health
 - ✅ Queue lengths
@@ -166,11 +180,13 @@ Access Flower dashboard at http://localhost:5555 to view:
 ## Next Steps for You
 
 1. **Test locally**:
+
    ```bash
    docker-compose -f docker-compose.scalable.yml up --build
    ```
 
 2. **Test scaling**:
+
    ```bash
    docker-compose -f docker-compose.scalable.yml up --scale face-worker=3
    ```
@@ -184,6 +200,7 @@ Access Flower dashboard at http://localhost:5555 to view:
 ## Files Modified/Created
 
 ### New Files (9)
+
 - `app/celery_app.py`
 - `app/tasks/__init__.py`
 - `app/tasks/face_tasks.py`
@@ -198,6 +215,7 @@ Access Flower dashboard at http://localhost:5555 to view:
 - `start_object_worker.sh`
 
 ### Modified Files (3)
+
 - `requirements.txt` (added Celery, Redis, Flower)
 - `app/config.py` (added Celery config)
 - `.env.example` (added Celery URLs)
@@ -211,6 +229,7 @@ You now have **two deployment modes**:
 2. **Scalable Mode** (new): Production-ready, horizontally scalable
 
 The scalable architecture allows you to:
+
 - ✅ Handle 10x-100x more traffic
 - ✅ Scale face and object detection independently
 - ✅ Reduce API response times (immediate task_id)

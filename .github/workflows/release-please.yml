@@ -1,0 +1,40 @@
+---
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          # Release type determines versioning and changelog format
+          release-type: python
+
+      # Optional: Publish to PyPI when a release is created
+      # - name: Publish to PyPI
+      #   if: ${{ steps.release.outputs.release_created }}
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
+
+      # Optional: Build and push Docker image on release
+      - name: Build and Push Docker Image
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          echo "Release created: ${{ steps.release.outputs.tag_name }}"
+          echo "Major version: ${{ steps.release.outputs.major }}"
+          echo "Minor version: ${{ steps.release.outputs.minor }}"
+          echo "Patch version: ${{ steps.release.outputs.patch }}"
+          # Add your Docker build and push commands here
+          # docker build -t recognize:${{ steps.release.outputs.tag_name }} .
+          # docker push recognize:${{ steps.release.outputs.tag_name }}

@@ -1,11 +1,10 @@
 """
 Flask routes for the Recognize application - Async version with Celery tasks
 """
-from flask import Blueprint, render_template, request, jsonify, send_from_directory, current_app
-from werkzeug.utils import secure_filename
-from pathlib import Path
 import logging
-import os
+
+from flask import Blueprint, current_app, render_template, request, send_from_directory
+
 from app.utils.file_handler import FileHandler
 from app.utils.response_handler import ResponseHandler
 
@@ -15,6 +14,7 @@ logger = logging.getLogger(__name__)
 main_bp = Blueprint('main', __name__)
 api_bp = Blueprint('api', __name__)
 
+
 # Import Celery tasks (lazy import to avoid circular dependencies)
 def get_celery_tasks():
     """Lazy import of Celery tasks"""
@@ -23,7 +23,7 @@ def get_celery_tasks():
             detect_faces_in_image_task,
             detect_faces_in_video_task,
             detect_objects_in_image_task,
-            detect_objects_in_video_task
+            detect_objects_in_video_task,
         )
         return {
             'face_image': detect_faces_in_image_task,
@@ -83,9 +83,12 @@ def detect_face_image():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_IMAGE_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_IMAGE_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_IMAGE_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
@@ -134,15 +137,22 @@ def detect_face_video():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_VIDEO_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_VIDEO_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_VIDEO_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
 
         # Get frame skip parameter
-        frame_skip = request.form.get('frame_skip', current_app.config.get('VIDEO_FRAME_SKIP', 5), type=int)
+        frame_skip = request.form.get(
+            'frame_skip',
+            current_app.config.get('VIDEO_FRAME_SKIP', 5),
+            type=int
+        )
 
         # Get Celery tasks
         tasks = get_celery_tasks()
@@ -188,9 +198,12 @@ def detect_object_image():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_IMAGE_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_IMAGE_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_IMAGE_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
@@ -242,15 +255,22 @@ def detect_object_video():
             return ResponseHandler.error('No file selected', 400)
 
         # Validate file type
-        if not FileHandler.allowed_file(file.filename, current_app.config['ALLOWED_VIDEO_EXTENSIONS']):
-            return ResponseHandler.error('Invalid file type. Allowed: ' +
-                                        ', '.join(current_app.config['ALLOWED_VIDEO_EXTENSIONS']), 400)
+        allowed_exts = current_app.config['ALLOWED_VIDEO_EXTENSIONS']
+        if not FileHandler.allowed_file(file.filename, allowed_exts):
+            return ResponseHandler.error(
+                f"Invalid file type. Allowed: {', '.join(allowed_exts)}",
+                400
+            )
 
         # Save file
         filepath = FileHandler.save_upload(file, current_app.config['UPLOAD_FOLDER'])
 
         # Get frame skip parameter
-        frame_skip = request.form.get('frame_skip', current_app.config.get('VIDEO_FRAME_SKIP', 5), type=int)
+        frame_skip = request.form.get(
+            'frame_skip',
+            current_app.config.get('VIDEO_FRAME_SKIP', 5),
+            type=int
+        )
 
         # Get Celery tasks
         tasks = get_celery_tasks()
@@ -291,6 +311,7 @@ def get_task_status(task_id):
     """Get the status of a Celery task"""
     try:
         from celery.result import AsyncResult
+
         from app.celery_app import celery_app
 
         task = AsyncResult(task_id, app=celery_app)

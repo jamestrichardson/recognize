@@ -1,8 +1,10 @@
 """
 Tests for service modules
 """
-import pytest
 from pathlib import Path
+
+import pytest
+
 from app.services import FacialRecognitionService, ObjectDetectionService
 
 

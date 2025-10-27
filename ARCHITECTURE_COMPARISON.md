@@ -2,7 +2,7 @@
 
 ## Before: Monolithic Architecture
 
-```
+```text
                     ┌─────────────────────────┐
                     │       Client            │
                     └───────────┬─────────────┘
@@ -31,11 +31,11 @@ Issues:
 ❌ Can't scale face/object detection independently
 ❌ Resource bottlenecks
 ❌ Poor user experience for long-running tasks
-```
+```text
 
 ## After: Microservices + Task Queue Architecture
 
-```
+```text
                     ┌─────────────────────────┐
                     │       Client            │
                     └───────┬─────────────────┘
@@ -98,32 +98,35 @@ Benefits:
 ✅ Optimized resource allocation
 ✅ Better user experience
 ✅ Cost-effective (scale as needed)
-```
+```text
 
 ## Scaling Examples
 
 ### Example 1: Low Traffic (Development)
-```
+
+```text
 web:              1 instance
 redis:            1 instance
 face-worker:      1 instance
 object-worker:    1 instance
 ---
 Total: 4 containers
-```
+```text
 
 ### Example 2: Medium Traffic (Small Production)
-```
+
+```text
 web:              2 instances (load balanced)
 redis:            1 instance (HA setup)
 face-worker:      3 instances
 object-worker:    3 instances
 ---
 Total: 9 containers
-```
+```text
 
 ### Example 3: High Traffic (Large Production)
-```
+
+```text
 web:              5 instances (load balanced)
 redis:            3 instances (cluster)
 face-worker:      20 instances (auto-scaling)
@@ -131,20 +134,22 @@ object-worker:    15 instances (auto-scaling)
 ---
 Total: 43 containers
 Auto-scales based on queue length
-```
+```text
 
 ## Cost Comparison (Example AWS)
 
 ### Monolithic (Before)
-```
+
+```text
 1 x c5.4xlarge (16 vCPU, 32GB RAM)
 Running 24/7
 Cost: ~$500/month
 Max throughput: ~10 concurrent requests
-```
+```text
 
 ### Microservices (After)
-```
+
+```text
 1 x t3.medium (web)         = $30/month
 1 x t3.micro (redis)        = $8/month
 3 x t3.large (face workers) = $95/month
@@ -159,19 +164,21 @@ Average: ~$275/month
 
 Savings: 45% cheaper
 Max throughput: 100+ concurrent requests
-```
+```text
 
 ## Request Flow Comparison
 
 ### Monolithic Flow
-```
+
+```text
 Client → Upload → Wait 30s → Get Results
 Total time: 30 seconds
 User experience: ⭐⭐ (blocking)
-```
+```text
 
 ### Microservices Flow
-```
+
+```text
 Client → Upload → Get task_id (instant) → Poll every 2s → Get Results
 Total time: 30 seconds (but non-blocking)
 User experience: ⭐⭐⭐⭐⭐ (responsive)
@@ -181,11 +188,12 @@ Client can:
 - Upload more files
 - Check status periodically
 - Get notifications when complete
-```
+```text
 
 ## Technology Stack
 
 ### Core Components
+
 - **Flask**: Web framework (lightweight, Python)
 - **Celery**: Distributed task queue (battle-tested, mature)
 - **Redis**: Message broker (fast, reliable)
