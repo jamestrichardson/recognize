@@ -1,0 +1,119 @@
+---
+version: '3.8'
+
+services:
+  # Redis - Message broker for Celery
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  # Flask Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key}
+      - UPLOAD_FOLDER=/app/uploads
+      - MODELS_DIR=/app/models
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Face Detection Workers (scalable)
+  face-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.face-worker
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - MODELS_DIR=/app/models
+      - FACE_CASCADE_PATH=/app/models/haarcascade_frontalface_default.xml
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    # Scale with: docker-compose up --scale face-worker=3
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+
+  # Object Detection Workers (scalable)
+  object-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.object-worker
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - MODELS_DIR=/app/models
+      - YOLO_WEIGHTS_PATH=/app/models/yolov3.weights
+      - YOLO_CONFIG_PATH=/app/models/yolov3.cfg
+      - YOLO_NAMES_PATH=/app/models/coco.names
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    # Scale with: docker-compose up --scale object-worker=3
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+  # Optional: Celery Flower (monitoring dashboard)
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A app.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  redis_data:

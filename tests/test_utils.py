@@ -1,8 +1,10 @@
 """
 Tests for utility modules
 """
-import pytest
 from pathlib import Path
+
+import pytest
+
 from app.utils import FileHandler, ResponseHandler
 
 
@@ -34,7 +36,7 @@ def test_file_handler_is_video():
     assert FileHandler.is_video('photo.jpg') is False
 
 
-def test_response_handler_success():
+def test_response_handler_success(app_context):
     """Test success response creation"""
     response, status_code = ResponseHandler.success({'key': 'value'})
     assert status_code == 200
@@ -43,7 +45,7 @@ def test_response_handler_success():
     assert 'data' in data
 
 
-def test_response_handler_error():
+def test_response_handler_error(app_context):
     """Test error response creation"""
     response, status_code = ResponseHandler.error('Test error', 400)
     assert status_code == 400
@@ -52,7 +54,7 @@ def test_response_handler_error():
     assert data['message'] == 'Test error'
 
 
-def test_response_handler_not_found():
+def test_response_handler_not_found(app_context):
     """Test not found response creation"""
     response, status_code = ResponseHandler.not_found('File')
     assert status_code == 404

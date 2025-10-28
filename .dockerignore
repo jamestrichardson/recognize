@@ -1,0 +1,134 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Environment files - SECURITY: Never copy these!
+.env
+.env.*
+!.env.example
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation (not needed in container)
+*.md
+!README.md
+docs/
+CONTRIBUTING.md
+LICENSE
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+azure-pipelines.yml
+
+# Pre-commit and code quality tools
+.pre-commit-config.yaml
+.pre-commit-hooks.yaml
+.markdownlint.yaml
+.flake8
+pyproject.toml
+setup.cfg
+
+# Development scripts
+setup-dev.sh
+test-commits.sh
+commit-help.sh
+Makefile
+
+# Docker files (meta - don't copy docker files into docker)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs
+*.log
+logs/
+
+# Uploads directory (should be volume-mounted in production)
+uploads/*
+!uploads/.gitkeep
+
+# Models (should be volume-mounted or downloaded separately)
+models/*.weights
+models/*.pb
+models/*.h5
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Sensitive files
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+credentials/
+
+# Release Please
+.release-please-config.json
+.release-please-manifest.json
+CHANGELOG.md
+
+# SonarQube
+sonar-project.properties
+.sonar/
+.scannerwork/
+
+# Test files and coverage reports
+tests/
+test_*.py
+*_test.py
+.coverage.*
+coverage.xml
+nosetests.xml
+test-results/
+
+# Large files that shouldn't be in container
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Database files (if any)
+*.db
+*.sqlite
+*.sqlite3
