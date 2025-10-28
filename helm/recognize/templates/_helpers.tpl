@@ -76,9 +76,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Celery result backend URL
 */}}
 {{- define "recognize.celeryResultBackend" -}}
-redis://{{ include "recognize.redisHost" . }}:{{ include "recognize.redisPort" . }}/0
+{{- $password := include "recognize.redisPassword" . }}
+{{- $host := include "recognize.redisHost" . }}
+{{- $port := include "recognize.redisPort" . }}
+{{- if $password }}
+{{- printf "redis://:%s@%s:%s/0" $password $host $port }}
+{{- else }}
+{{- printf "redis://%s:%s/0" $host $port }}
 {{- end }}
-
+{{- end }}
 {{/*
 Create the name of the service account to use
 */}}
