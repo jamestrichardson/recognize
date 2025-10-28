@@ -5,7 +5,8 @@
 helm-version: v3.14.0
 
 # Validate maintainers in Chart.yaml
-validate-maintainers: true
+# Disabled because it requires GitHub API access and may fail in CI
+validate-maintainers: false
 
 # Check version increments
 check-version-increment: true
