@@ -1,44 +1,27 @@
 # Recognize - Object and Facial Recognition Application
 
+# Web Framework
 Flask>=3.0.0
 Werkzeug>=3.0.0
 Flask-CORS>=4.0.0
 python-dotenv>=1.0.0
 
-# Computer Vision Libraries
+# Computer Vision
 opencv-python>=4.8.0
-opencv-contrib-python>=4.8.0
 numpy>=1.24.0,<2.0.0
 
-# Deep Learning (Optional - for advanced models)
-# tensorflow==2.15.0
-# torch==2.1.0
-# torchvision==0.16.0
-
-# Image Processing
-Pillow>=10.0.0
-
-# API and Web
-requests>=2.31.0
+# Production WSGI Server
 gunicorn>=21.2.0
 
-# Task Queue and Message Broker
+# Task Queue (optional - only needed for scalable architecture)
 celery>=5.3.0
-redis>=5.0.0
 flower>=2.0.0
 
-# Logging and Monitoring
-python-json-logger>=2.0.0
-
-# Development Dependencies
+# Testing
 pytest>=7.4.0
 pytest-cov>=4.1.0
-black>=23.0.0
-flake8>=6.1.0
-pylint>=3.0.0
+
+# Development Tools
 pre-commit>=3.6.0
 isort>=5.13.0
-mypy>=1.8.0
-bandit>=1.7.0
 interrogate>=1.5.0
-safety>=2.3.0
