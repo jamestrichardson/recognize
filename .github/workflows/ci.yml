@@ -120,11 +120,6 @@ jobs:
         run: |
           helm template recognize helm/recognize --debug
 
-      - name: Validate rendered templates
-        run: |
-          helm template recognize helm/recognize | kubectl apply --dry-run=client -f -
-        if: always()
-
       - name: Install kubeconform
         run: |
           wget https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
