@@ -160,6 +160,10 @@ monitoring:
   flower:
     enabled: true
     replicaCount: 1
+    image:
+      repository: mher/flower
+      tag: "2.0.1"
+      pullPolicy: IfNotPresent
     service:
       type: ClusterIP
       port: 5555

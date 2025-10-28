@@ -43,8 +43,8 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: flower
-        image: mher/flower:latest
-        imagePullPolicy: IfNotPresent
+        image: "{{ .Values.monitoring.flower.image.repository }}:{{ .Values.monitoring.flower.image.tag }}"
+        imagePullPolicy: {{ .Values.monitoring.flower.image.pullPolicy }}
         ports:
         - name: http
           containerPort: 5555
