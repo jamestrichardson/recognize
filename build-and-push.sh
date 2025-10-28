@@ -17,7 +17,7 @@ FACE_WORKER_IMAGE="${REGISTRY}/${DOCKER_USERNAME}/recognize-face-worker"
 OBJECT_WORKER_IMAGE="${REGISTRY}/${DOCKER_USERNAME}/recognize-object-worker"
 
 # Platforms to build for
-PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+PLATFORMS="linux/amd64,linux/arm64"
 
 echo "=========================================="
 echo "Building and Pushing Docker Images"
