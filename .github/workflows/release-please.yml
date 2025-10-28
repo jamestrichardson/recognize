@@ -29,7 +29,7 @@ jobs:
         with:
           # Release type determines versioning and changelog format
           release-type: simple
-          token:
+          token: ${{ steps.app-token.token }}
 
       # Optional: Build and push Docker image on release
       - name: Build and Push Docker Image
