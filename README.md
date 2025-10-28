@@ -79,31 +79,31 @@ recognize/
 
 1. Clone the repository:
 
-```bash
-git clone <repository-url>
-cd recognize
-```
+   ```bash
+   git clone <repository-url>
+   cd recognize
+   ```
 
-1. Create a virtual environment:
+2. Create a virtual environment:
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-1. Install dependencies:
+3. Install dependencies:
 
-```bash
-pip install -r requirements.txt
-```text
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-1. Copy the example environment file:
+4. Copy the example environment file:
 
-```bash
-cp .env.example .env
-```
+   ```bash
+   cp .env.example .env
+   ```
 
-1. Edit `.env` and configure your settings (especially `SECRET_KEY` for production)
+5. Edit `.env` and configure your settings (especially `SECRET_KEY` for production)
 
 ### Model Files
 
@@ -121,7 +121,7 @@ Place the following model files in the `models/` directory:
 
 ```bash
 python run.py
-```text
+```
 
 The application will be available at `http://localhost:5000`
 
@@ -131,7 +131,7 @@ Build and run with Docker Compose:
 
 ```bash
 docker-compose up --build
-```text
+```
 
 ### API Endpoints
 
@@ -139,7 +139,7 @@ docker-compose up --build
 
 ```text
 GET /api/health
-```text
+```
 
 #### Face Detection - Image
 
@@ -147,7 +147,7 @@ GET /api/health
 POST /api/detect/face/image
 Content-Type: multipart/form-data
 Body: file (image file)
-```text
+```
 
 #### Face Detection - Video
 
@@ -157,7 +157,7 @@ Content-Type: multipart/form-data
 Body:
   - file (video file)
   - frame_skip (optional, default: 5)
-```text
+```
 
 #### Object Detection - Image
 
@@ -165,7 +165,7 @@ Body:
 POST /api/detect/object/image
 Content-Type: multipart/form-data
 Body: file (image file)
-```text
+```
 
 #### Object Detection - Video
 
@@ -175,7 +175,7 @@ Content-Type: multipart/form-data
 Body:
   - file (video file)
   - frame_skip (optional, default: 5)
-```text
+```
 
 ## Configuration
 
@@ -194,13 +194,13 @@ Run the test suite:
 
 ```bash
 pytest
-```text
+```
 
 Run with coverage:
 
 ```bash
 pytest --cov=app tests/
-```text
+```
 
 ## Development
 
@@ -222,14 +222,14 @@ Run the automated setup script:
 
 ```bash
 ./setup-dev.sh
-```text
+```
 
 Or manually install hooks:
 
 ```bash
 pip install pre-commit
 make install-hooks  # Installs both pre-commit and commit-msg hooks
-```text
+```
 
 ### Conventional Commits
 
@@ -243,7 +243,7 @@ This enables automated versioning and changelog generation.
 
 [optional body]
 [optional footer(s)]
-```text
+```
 
 #### Common Types
 
@@ -260,13 +260,13 @@ This enables automated versioning and changelog generation.
 git commit -m "feat: add video thumbnail generation"
 git commit -m "fix(api): correct rate limiting logic"
 git commit -m "docs: update deployment instructions"
-```text
+```
 
 For breaking changes:
 
 ```bash
 git commit -m "feat!: change API response format"
-```text
+```
 
 📖 **See [docs/CONVENTIONAL_COMMITS.md](docs/CONVENTIONAL_COMMITS.md) for detailed guide**
 
@@ -283,7 +283,7 @@ make security-check  # Run bandit security scan
 
 # Auto-fix all issues
 make format-fix
-```text
+```
 
 #### Using Makefile Commands
 
@@ -316,7 +316,7 @@ make docker-down    # Stop containers
 # Cleanup
 make clean          # Remove cache files
 make clean-all      # Deep clean including venv
-```text
+```
 
 📖 **See [docs/PRE_COMMIT_GUIDE.md](docs/PRE_COMMIT_GUIDE.md) for detailed pre-commit documentation**
 
