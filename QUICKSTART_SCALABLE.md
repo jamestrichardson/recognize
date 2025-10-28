@@ -12,7 +12,7 @@ Run without task queue (synchronous processing):
 
 ```bash
 docker-compose up --build
-```text
+```
 
 Access at: <http://localhost:5000>
 
@@ -28,7 +28,7 @@ docker-compose -f docker-compose.scalable.yml up --build
 docker-compose -f docker-compose.scalable.yml up --build \
   --scale face-worker=3 \
   --scale object-worker=3
-```text
+```
 
 Access:
 
@@ -53,44 +53,55 @@ Access:
 ```bash
 curl -X POST http://localhost:5000/api/detect/face/image \
   -F "file=@/path/to/image.jpg"
+```
 
-# Response:
-# {
-#   "success": true,
-#   "data": {
-#     "task_id": "abc-123-def-456",
-#     "status": "queued"
-#   }
-# }
-```text
+Response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "task_id": "abc-123-def-456",
+    "status": "queued"
+  }
+}
+```
 
 ### 2. Check Task Status
 
 ```bash
 curl http://localhost:5000/api/task/abc-123-def-456
 
-# While processing:
-# {
-#   "success": true,
-#   "data": {
-#     "state": "PROCESSING",
-#     "status": "Detecting faces in image"
-#   }
-# }
+While processing:
 
-# When complete:
-# {
-#   "success": true,
-#   "data": {
-#     "state": "SUCCESS",
-#     "result": { ... full results ... }
-#   }
-# }
+```json
+{
+  "success": true,
+  "data": {
+    "state": "PROCESSING",
+    "status": "Detecting faces in image"
+  }
+}
+```
+
+When complete:
+
+```json
+{
+  "success": true,
+  "data": {
+    "state": "SUCCESS",
+    "result": { ... full results ... }
+  }
+}
+```
 ```text
 
 ## Monitoring
+```
 
-Open Flower dashboard: <http://localhost:5555>
+```text
+
 
 View:
 
@@ -109,7 +120,7 @@ docker-compose -f docker-compose.scalable.yml up --scale face-worker=5 -d
 
 # Scale down object workers to 1
 docker-compose -f docker-compose.scalable.yml up --scale object-worker=1 -d
-```text
+
 
 ### In Configuration
 
@@ -119,7 +130,7 @@ Edit `docker-compose.scalable.yml`:
 face-worker:
   deploy:
     replicas: 5  # Change this number
-```text
+
 
 ## Environment Variables
 
@@ -134,7 +145,7 @@ Key settings for scalable mode:
 ```bash
 CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_RESULT_BACKEND=redis://redis:6379/0
-```text
+
 
 ## Common Issues
 
@@ -147,7 +158,7 @@ docker-compose logs redis
 # Check worker logs
 docker-compose logs face-worker
 docker-compose logs object-worker
-```text
+
 
 ### Out of memory
 
@@ -157,7 +168,7 @@ Reduce worker concurrency in Dockerfiles:
 CMD ["celery", "-A", "app.celery_app", "worker", \
      "--concurrency=1", \  # Lower this
      ...]
-```text
+
 
 ## Development Mode
 
@@ -167,25 +178,25 @@ For local development without Docker:
 
 ```bash
 docker run -p 6379:6379 redis:7-alpine
-```text
+
 
 1. Start Flask app:
 
 ```bash
 python run.py
-```text
+
 
 1. Start face worker:
 
 ```bash
 celery -A app.celery_app worker --queues=face_detection --loglevel=info
-```text
+
 
 1. Start object worker:
 
 ```bash
 celery -A app.celery_app worker --queues=object_detection --loglevel=info
-```text
+
 
 ## Next Steps
 
