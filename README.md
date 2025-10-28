@@ -66,7 +66,7 @@ recognize/
 ├── Dockerfile              # Docker configuration
 ├── docker-compose.yml      # Docker Compose setup
 └── run.py                  # Application entry point
-```text
+```
 
 ## Installation
 
