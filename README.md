@@ -84,14 +84,12 @@ git clone <repository-url>
 cd recognize
 ```
 
-```text
-
 1. Create a virtual environment:
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-```text
+```
 
 1. Install dependencies:
 
@@ -103,7 +101,7 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-```text
+```
 
 1. Edit `.env` and configure your settings (especially `SECRET_KEY` for production)
 
