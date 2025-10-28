@@ -2,7 +2,9 @@
 
 ## What Was Built
 
-I've implemented a complete **task queue architecture** using **Celery + Redis** to separate compute-intensive facial recognition and object detection tasks into independent, scalable worker containers.
+I've implemented a complete **task queue architecture** using **Celery + Redis** to
+separate compute-intensive facial recognition and object detection tasks into
+independent, scalable worker containers.
 
 ## Key Components Added
 

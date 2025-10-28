@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/jamestrichardson/recognize/blob/main/README.md
+    about: Check the README and documentation for setup and usage instructions
+  - name: Discussions
+    url: https://github.com/jamestrichardson/recognize/discussions
+    about: Ask questions and discuss ideas with the community
