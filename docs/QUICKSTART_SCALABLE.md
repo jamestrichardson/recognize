@@ -200,7 +200,7 @@ celery -A app.celery_app worker --queues=object_detection --loglevel=info
 
 ## Next Steps
 
-See [SCALABLE_ARCHITECTURE.md](SCALABLE_ARCHITECTURE.md) for:
+See [docs/SCALABLE_ARCHITECTURE.md](docs/SCALABLE_ARCHITECTURE.md) for:
 
 - Detailed architecture explanation
 - Production deployment guide

@@ -237,6 +237,6 @@ The scalable architecture allows you to:
 - ✅ Deploy to any cloud platform
 - ✅ Monitor everything in real-time
 
-**Start here**: [docs/QUICKSTART_SCALABLE.md](docs/QUICKSTART_SCALABLE.md)
+**Start here**: [QUICKSTART_SCALABLE.md](QUICKSTART_SCALABLE.md)
 
-**Learn more**: [docs/SCALABLE_ARCHITECTURE.md](docs/SCALABLE_ARCHITECTURE.md)
+**Learn more**: [SCALABLE_ARCHITECTURE.md](SCALABLE_ARCHITECTURE.md)

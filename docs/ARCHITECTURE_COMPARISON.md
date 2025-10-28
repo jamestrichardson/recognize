@@ -221,4 +221,4 @@ You now have a **production-ready, horizontally scalable** architecture that:
 ✅ **Observable**: Monitor everything in real-time
 ✅ **Resilient**: Workers can fail/restart without affecting API
 
-**Next Steps**: See [QUICKSTART_SCALABLE.md](QUICKSTART_SCALABLE.md) to get started!
+**Next Steps**: See [docs/QUICKSTART_SCALABLE.md](docs/QUICKSTART_SCALABLE.md) to get started!

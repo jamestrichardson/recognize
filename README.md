@@ -16,12 +16,12 @@ A Flask-based web application for performing object detection and facial recogni
 
 ## Documentation
 
-- 📖 [Scalable Architecture Guide](SCALABLE_ARCHITECTURE.md) - Detailed architecture documentation
-- 🚀 [Quick Start Guide](QUICKSTART_SCALABLE.md) - Get up and running quickly
-- 🔧 [Pre-commit Setup](PRE_COMMIT_GUIDE.md) - Code quality automation
-- 📝 [Conventional Commits](CONVENTIONAL_COMMITS.md) - Commit message standards
-- 🎯 [Release Process](RELEASE_SETUP.md) - Automated release workflow
-- 🔒 [Docker Security](DOCKER_SECURITY.md) - Container security best practices
+- 📖 [Scalable Architecture Guide](docs/SCALABLE_ARCHITECTURE.md) - Detailed architecture documentation
+- 🚀 [Quick Start Guide](docs/QUICKSTART_SCALABLE.md) - Get up and running quickly
+- 🔧 [Pre-commit Setup](docs/PRE_COMMIT_GUIDE.md) - Code quality automation
+- 📝 [Conventional Commits](docs/CONVENTIONAL_COMMITS.md) - Commit message standards
+- 🎯 [Release Process](docs/RELEASE_SETUP.md) - Automated release workflow
+- 🔒 [Docker Security](docs/DOCKER_SECURITY.md) - Container security best practices
 
 ## Architecture Modes
 
@@ -38,9 +38,9 @@ A Flask-based web application for performing object detection and facial recogni
 - Independent scaling of face/object detection workers
 - Good for: Production, high traffic, compute-intensive workloads
 
-📖 **See [SCALABLE_ARCHITECTURE.md](SCALABLE_ARCHITECTURE.md) for detailed architecture guide**
+📖 **See [docs/SCALABLE_ARCHITECTURE.md](docs/SCALABLE_ARCHITECTURE.md) for detailed architecture guide**
 
-🚀 **See [QUICKSTART_SCALABLE.md](QUICKSTART_SCALABLE.md) for quick setup instructions**
+🚀 **See [docs/QUICKSTART_SCALABLE.md](docs/QUICKSTART_SCALABLE.md) for quick setup instructions**
 
 ## Project Structure
 
@@ -268,7 +268,7 @@ For breaking changes:
 git commit -m "feat!: change API response format"
 ```text
 
-📖 **See [CONVENTIONAL_COMMITS.md](CONVENTIONAL_COMMITS.md) for detailed guide**
+📖 **See [docs/CONVENTIONAL_COMMITS.md](docs/CONVENTIONAL_COMMITS.md) for detailed guide**
 
 #### Running Checks Manually
 
@@ -318,7 +318,7 @@ make clean          # Remove cache files
 make clean-all      # Deep clean including venv
 ```text
 
-📖 **See [PRE_COMMIT_GUIDE.md](PRE_COMMIT_GUIDE.md) for detailed pre-commit documentation**
+📖 **See [docs/PRE_COMMIT_GUIDE.md](docs/PRE_COMMIT_GUIDE.md) for detailed pre-commit documentation**
 
 ### Code Style
 
