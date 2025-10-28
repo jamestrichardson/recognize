@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/jamestrichardson/recognize/compare/v1.0.0...v1.1.0) (2025-10-28)
+
+
+### Features
+
+* **docker:** build and publish the containers ([9448947](https://github.com/jamestrichardson/recognize/commit/9448947d45601d928faa3d70ec9ca13f5320573b))
+* **docker:** build and publish the containers ([2964de6](https://github.com/jamestrichardson/recognize/commit/2964de67cb66449c5a8b95c2083c261d3b084552))
+
 ## 1.0.0 (2025-10-28)
 
 
