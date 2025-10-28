@@ -48,7 +48,7 @@ jobs:
       # Build and push main web application image
       - name: Build and Push Web Application
         if: ${{ steps.release.outputs.release_created }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
@@ -61,7 +61,7 @@ jobs:
       # Build and push face worker image
       - name: Build and Push Face Worker
         if: ${{ steps.release.outputs.release_created }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.face-worker
@@ -74,7 +74,7 @@ jobs:
       # Build and push object worker image
       - name: Build and Push Object Worker
         if: ${{ steps.release.outputs.release_created }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.object-worker
