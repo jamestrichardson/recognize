@@ -31,14 +31,55 @@ jobs:
           release-type: simple
           token: ${{ steps.app-token.outputs.token }}
 
-      # Optional: Build and push Docker image on release
-      - name: Build and Push Docker Image
+      # Set up Docker Buildx for multi-platform builds
+      - name: Set up Docker Buildx
         if: ${{ steps.release.outputs.release_created }}
-        run: |
-          echo "Release created: ${{ steps.release.outputs.tag_name }}"
-          echo "Major version: ${{ steps.release.outputs.major }}"
-          echo "Minor version: ${{ steps.release.outputs.minor }}"
-          echo "Patch version: ${{ steps.release.outputs.patch }}"
-          # Add your Docker build and push commands here
-          # docker build -t recognize:${{ steps.release.outputs.tag_name }} .
-          # docker push recognize:${{ steps.release.outputs.tag_name }}
+        uses: docker/setup-buildx-action@v3
+
+      # Login to GitHub Container Registry
+      - name: Login to GitHub Container Registry
+        if: ${{ steps.release.outputs.release_created }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ steps.app-token.outputs.token }}
+
+      # Build and push main web application image
+      - name: Build and Push Web Application
+        if: ${{ steps.release.outputs.release_created }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/jamestrichardson/recognize:${{ steps.release.outputs.tag_name }}
+            ghcr.io/jamestrichardson/recognize:latest
+
+      # Build and push face worker image
+      - name: Build and Push Face Worker
+        if: ${{ steps.release.outputs.release_created }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.face-worker
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/jamestrichardson/recognize-face-worker:${{ steps.release.outputs.tag_name }}
+            ghcr.io/jamestrichardson/recognize-face-worker:latest
+
+      # Build and push object worker image
+      - name: Build and Push Object Worker
+        if: ${{ steps.release.outputs.release_created }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.object-worker
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/jamestrichardson/recognize-object-worker:${{ steps.release.outputs.tag_name }}
+            ghcr.io/jamestrichardson/recognize-object-worker:latest
