@@ -1,0 +1,63 @@
+{{- if .Values.monitoring.flower.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "recognize.fullname" . }}-flower
+  labels:
+    {{- include "recognize.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5555
+      targetPort: 5555
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "recognize.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "recognize.fullname" . }}-flower
+  labels:
+    {{- include "recognize.labels" . | nindent 4 }}
+    app.kubernetes.io/component: flower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "recognize.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: flower
+  template:
+    metadata:
+      labels:
+        {{- include "recognize.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: flower
+    spec:
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "recognize.serviceAccountName" . }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: flower
+        image: "{{ .Values.monitoring.flower.image.repository }}:{{ .Values.monitoring.flower.image.tag }}"
+        imagePullPolicy: {{ .Values.monitoring.flower.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 5555
+          protocol: TCP
+        env:
+        - name: CELERY_BROKER_URL
+          value: {{ include "recognize.celeryBrokerUrl" . | quote }}
+        - name: CELERY_RESULT_BACKEND
+          value: {{ include "recognize.celeryResultBackend" . | quote }}
+        {{- if .Values.monitoring.flower.auth.enabled }}
+        - name: FLOWER_BASIC_AUTH
+          value: {{ .Values.monitoring.flower.auth.username }}:{{ .Values.monitoring.flower.auth.password }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.monitoring.flower.resources | nindent 12 }}
+{{- end }}

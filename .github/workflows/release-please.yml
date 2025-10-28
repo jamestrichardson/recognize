@@ -1,7 +1,7 @@
 ---
 name: Release Please
 
-on:
+"on":
   push:
     branches:
       - main
@@ -83,3 +83,30 @@ jobs:
           tags: |
             ghcr.io/jamestrichardson/recognize-object-worker:${{ steps.release.outputs.tag_name }}
             ghcr.io/jamestrichardson/recognize-object-worker:latest
+
+      # Package and publish Helm chart to GitHub Container Registry
+      - name: Install Helm
+        if: ${{ steps.release.outputs.release_created }}
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Package Helm Chart
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          helm package helm/recognize
+
+      - name: Login to GHCR for Helm
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          echo ${{ steps.app-token.outputs.token }} | \
+            helm registry login ghcr.io -u ${{ github.repository_owner }} \
+            --password-stdin
+
+      - name: Push Helm Chart to GHCR
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          MAJOR="${{ steps.release.outputs.major }}"
+          MINOR="${{ steps.release.outputs.minor }}"
+          PATCH="${{ steps.release.outputs.patch }}"
+          helm push recognize-${MAJOR}.${MINOR}.${PATCH}.tgz oci://ghcr.io/jamestrichardson/helm

@@ -18,6 +18,7 @@ A Flask-based web application for performing object detection and facial recogni
 
 - 📖 [Scalable Architecture Guide](docs/SCALABLE_ARCHITECTURE.md) - Detailed architecture documentation
 - 🚀 [Quick Start Guide](docs/QUICKSTART_SCALABLE.md) - Get up and running quickly
+- ☸️ [Helm Installation Guide](docs/HELM_INSTALLATION.md) - Kubernetes deployment with Helm
 - 🔧 [Pre-commit Setup](docs/PRE_COMMIT_GUIDE.md) - Code quality automation
 - 📝 [Conventional Commits](docs/CONVENTIONAL_COMMITS.md) - Commit message standards
 - 🎯 [Release Process](docs/RELEASE_SETUP.md) - Automated release workflow
@@ -76,6 +77,14 @@ recognize/
 - pip package manager
 
 ### Setup
+
+**Choose your deployment method:**
+
+- **Local Development**: Follow steps below for Python virtual environment setup
+- **Docker Compose**: See [Quick Start Guide](docs/QUICKSTART_SCALABLE.md) for scalable architecture
+- **Kubernetes/Helm**: See [Helm Installation Guide](docs/HELM_INSTALLATION.md) for production deployment
+
+#### Local Setup
 
 1. Clone the repository:
 

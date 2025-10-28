@@ -4,7 +4,24 @@
   "packages": {
     ".": {
       "package-name": "recognize",
-      "changelog-path": "CHANGELOG.md"
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "yaml",
+          "path": "helm/recognize/Chart.yaml",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/recognize/Chart.yaml",
+          "jsonpath": "$.appVersion"
+        },
+        {
+          "type": "yaml",
+          "path": "helm/recognize/values.yaml",
+          "jsonpath": "$.image.tag"
+        }
+      ]
     }
   },
   "changelog-sections": [

@@ -1,0 +1,33 @@
+{{- if .Values.autoscaling.objectWorker.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "recognize.fullname" . }}-object-worker
+  labels:
+    {{- include "recognize.labels" . | nindent 4 }}
+    app.kubernetes.io/component: object-worker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "recognize.fullname" . }}-object-worker
+  minReplicas: {{ .Values.autoscaling.objectWorker.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.objectWorker.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.objectWorker.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.objectWorker.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.autoscaling.objectWorker.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.objectWorker.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
