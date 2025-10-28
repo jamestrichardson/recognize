@@ -1,0 +1,127 @@
+{{- $fullName := include "recognize.fullname" . -}}
+{{- $webService := printf "%s-web" $fullName -}}
+{{- $flowerService := printf "%s-flower" $fullName -}}
+Congratulations! The Recognize application has been deployed to Kubernetes.
+
+Chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+COMPONENTS DEPLOYED:
+  ✓ Web Application: {{ .Values.replicaCount.web }} replica(s)
+  ✓ Face Detection Worker: {{ .Values.replicaCount.faceWorker }} replica(s)
+  ✓ Object Detection Worker: {{ .Values.replicaCount.objectWorker }} replica(s)
+{{- if .Values.redis.enabled }}
+  ✓ Redis: Standalone with {{ .Values.redis.master.persistence.size }} persistent storage
+{{- end }}
+{{- if .Values.monitoring.flower.enabled }}
+  ✓ Flower Monitoring: Enabled
+{{- end }}
+
+ACCESSING THE APPLICATION:
+
+{{- if .Values.ingress.enabled }}
+1. Web Application is available at:
+   https://{{ .Values.ingress.host }}
+{{- else }}
+1. Get the application URL by running:
+   kubectl port-forward -n {{ .Release.Namespace }} svc/{{ $webService }} 5000:5000
+
+   Then access the application at: http://localhost:5000
+{{- end }}
+
+{{- if .Values.monitoring.flower.enabled }}
+{{- if .Values.monitoring.flower.ingress.enabled }}
+2. Flower monitoring is available at:
+   https://{{ .Values.monitoring.flower.ingress.host }}
+{{- else }}
+2. Access Flower monitoring dashboard:
+   kubectl port-forward -n {{ .Release.Namespace }} svc/{{ $flowerService }} 5555:5555
+
+   Then open: http://localhost:5555
+{{- end }}
+{{- end }}
+
+CONFIGURATION:
+
+View the current configuration:
+  helm get values {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+PERSISTENT STORAGE:
+
+{{- if .Values.persistence.uploads.enabled }}
+- Uploads PVC: {{ $fullName }}-uploads ({{ .Values.persistence.uploads.size }})
+{{- end }}
+{{- if .Values.persistence.models.enabled }}
+- Models PVC: {{ $fullName }}-models ({{ .Values.persistence.models.size }})
+{{- end }}
+{{- if not (or .Values.persistence.uploads.enabled .Values.persistence.models.enabled) }}
+⚠️  WARNING: Persistent storage is disabled. Data will be lost on pod restarts.
+{{- end }}
+
+SCALING:
+
+{{- if or .Values.autoscaling.web.enabled .Values.autoscaling.faceWorker.enabled .Values.autoscaling.objectWorker.enabled }}
+Autoscaling is enabled for:
+{{- if .Values.autoscaling.web.enabled }}
+  - Web: {{ .Values.autoscaling.web.minReplicas }}-{{ .Values.autoscaling.web.maxReplicas }} replicas
+{{- end }}
+{{- if .Values.autoscaling.faceWorker.enabled }}
+  - Face Worker: {{ .Values.autoscaling.faceWorker.minReplicas }}-{{ .Values.autoscaling.faceWorker.maxReplicas }} replicas
+{{- end }}
+{{- if .Values.autoscaling.objectWorker.enabled }}
+  - Object Worker: {{ .Values.autoscaling.objectWorker.minReplicas }}-{{ .Values.autoscaling.objectWorker.maxReplicas }} replicas
+{{- end }}
+{{- else }}
+Manual scaling:
+  kubectl scale deployment -n {{ .Release.Namespace }} {{ $fullName }}-web --replicas=3
+  kubectl scale deployment -n {{ .Release.Namespace }} {{ $fullName }}-face-worker --replicas=3
+  kubectl scale deployment -n {{ .Release.Namespace }} {{ $fullName }}-object-worker --replicas=3
+{{- end }}
+
+LOGS:
+
+View logs for different components:
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/component=web --tail=50
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/component=face-worker --tail=50
+  kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/component=object-worker --tail=50
+
+HEALTH CHECKS:
+
+Check pod status:
+  kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Check application health:
+  kubectl exec -n {{ .Release.Namespace }} -it deployment/{{ $fullName }}-web -- curl localhost:5000/api/health
+
+TROUBLESHOOTING:
+
+1. Pods not starting:
+   kubectl describe pod -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. Check events:
+   kubectl get events -n {{ .Release.Namespace }} --sort-by='.lastTimestamp'
+
+3. Redis connection issues:
+   kubectl exec -n {{ .Release.Namespace }} -it deployment/{{ $fullName }}-web -- env | grep CELERY
+
+4. Storage issues:
+   kubectl get pvc -n {{ .Release.Namespace }}
+
+UPGRADING:
+
+To upgrade the deployment:
+  helm upgrade {{ .Release.Name }} recognize/recognize -n {{ .Release.Namespace }}
+
+To customize values:
+  helm upgrade {{ .Release.Name }} recognize/recognize -n {{ .Release.Namespace }} -f custom-values.yaml
+
+UNINSTALLING:
+
+To remove the deployment:
+  helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+Note: PersistentVolumeClaims are not deleted automatically. Delete them manually if needed:
+  kubectl delete pvc -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+For more information, visit: https://github.com/jamestrichardson/recognize

@@ -1,0 +1,185 @@
+---
+# Default values for recognize
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount:
+  web: 2
+  faceWorker: 2
+  objectWorker: 2
+
+image:
+  repository: teknofile/recognize
+  pullPolicy: IfNotPresent
+  tag: "1.1.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
+
+service:
+  type: ClusterIP
+  port: 5000
+  targetPort: 5000
+
+ingress:
+  enabled: false
+  className: "nginx"
+  host: "recognize.example.com"
+  annotations: {}
+  # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls: []
+  #  - secretName: recognize-tls
+  #    hosts:
+  #      - recognize.example.com
+
+resources:
+  web:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  faceWorker:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+  objectWorker:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+
+autoscaling:
+  web:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+  faceWorker:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  objectWorker:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Application configuration
+config:
+  secretKey: "change-me-in-production"
+  debug: false
+  maxContentLength: "104857600"  # 100MB
+  faceDetectionConfidence: "0.6"
+  objectDetectionConfidence: "0.5"
+  videoFrameSkip: "5"
+
+# Redis configuration
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: false
+    password: ""
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+
+# External Redis (if redis.enabled = false)
+externalRedis:
+  host: "redis.example.com"
+  port: 6379
+  password: ""
+  database: 0
+
+# Celery configuration
+celery:
+  brokerUrl: ""  # Auto-configured from redis settings
+  resultBackend: ""  # Auto-configured from redis settings
+  workerConcurrency:
+    face: 1
+    object: 1
+
+# Persistent volumes for uploads and models
+persistence:
+  uploads:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteMany
+    size: 10Gi
+  models:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadOnlyMany
+    size: 5Gi
+
+# Monitoring
+monitoring:
+  flower:
+    enabled: true
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      port: 5555
+    ingress:
+      enabled: false
+      className: "nginx"
+      host: "flower.recognize.example.com"
+      annotations: {}
+      tls: []
+      #  - secretName: flower-tls
+      #    hosts:
+      #      - flower.recognize.example.com
+    auth:
+      enabled: false
+      username: "admin"
+      password: "changeme"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi

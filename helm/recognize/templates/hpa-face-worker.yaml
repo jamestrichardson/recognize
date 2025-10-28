@@ -1,0 +1,33 @@
+{{- if .Values.autoscaling.faceWorker.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "recognize.fullname" . }}-face-worker
+  labels:
+    {{- include "recognize.labels" . | nindent 4 }}
+    app.kubernetes.io/component: face-worker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "recognize.fullname" . }}-face-worker
+  minReplicas: {{ .Values.autoscaling.faceWorker.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.faceWorker.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.faceWorker.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.faceWorker.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.autoscaling.faceWorker.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.faceWorker.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

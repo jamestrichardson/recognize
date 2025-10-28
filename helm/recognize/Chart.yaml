@@ -1,0 +1,17 @@
+---
+apiVersion: v2
+name: recognize
+description: Object and Facial Recognition Application with Scalable Worker Architecture
+type: application
+version: 1.1.0
+appVersion: "1.1.0"
+icon: https://example.com/icon.png
+keywords:
+  - computer-vision
+  - face-detection
+  - object-detection
+  - flask
+  - celery
+maintainers:
+  - name: James Richardson
+    email: james@jrichardson.com
