@@ -82,6 +82,8 @@ recognize/
 ```bash
 git clone <repository-url>
 cd recognize
+```
+
 ```text
 
 1. Create a virtual environment:
