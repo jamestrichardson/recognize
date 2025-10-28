@@ -101,7 +101,7 @@ affinity: {}
 
 # Application configuration
 config:
-  secretKey: "change-me-in-production"
+  secretKey: ""
   debug: false
   maxContentLength: "104857600"  # 100MB
   faceDetectionConfidence: "0.6"
