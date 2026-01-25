@@ -1,7 +1,7 @@
 ---
 name: Lint and Test
 
-on:
+"on":
   push:
     branches: [main, feat/*, fix/*]
   pull_request:
@@ -99,3 +99,51 @@ jobs:
       - name: Test Docker image
         run: |
           docker run --rm recognize:test python -c "import flask; print('Flask OK')"
+
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Lint Helm chart
+        run: |
+          helm lint helm/recognize
+
+      - name: Template Helm chart
+        run: |
+          helm template recognize helm/recognize --debug
+
+      - name: Install kubeconform
+        run: |
+          wget https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+          tar xzf kubeconform-linux-amd64.tar.gz
+          sudo mv kubeconform /usr/local/bin/
+
+      - name: Validate Kubernetes manifests with kubeconform
+        run: |
+          helm template recognize helm/recognize | \
+            kubeconform -strict -ignore-missing-schemas -kubernetes-version 1.29.0
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run chart-testing (lint)
+        run: |
+          ct lint --config .github/ct.yaml --charts helm/recognize
+
+      - name: Package chart
+        run: |
+          helm package helm/recognize
+
+      - name: Upload chart artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-chart
+          path: recognize-*.tgz

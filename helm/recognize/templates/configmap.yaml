@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "recognize.fullname" . }}-config
+  labels:
+    {{- include "recognize.labels" . | nindent 4 }}
+data:
+  DEBUG: {{ .Values.config.debug | quote }}
+  MAX_CONTENT_LENGTH: {{ .Values.config.maxContentLength | quote }}
+  FACE_DETECTION_CONFIDENCE: {{ .Values.config.faceDetectionConfidence | quote }}
+  OBJECT_DETECTION_CONFIDENCE: {{ .Values.config.objectDetectionConfidence | quote }}
+  VIDEO_FRAME_SKIP: {{ .Values.config.videoFrameSkip | quote }}
+  CELERY_BROKER_URL: {{ include "recognize.celeryBrokerUrl" . | quote }}
+  CELERY_RESULT_BACKEND: {{ include "recognize.celeryResultBackend" . | quote }}

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "recognize.fullname" . }}-face-worker
+  labels:
+    {{- include "recognize.labels" . | nindent 4 }}
+    app.kubernetes.io/component: face-worker
+spec:
+  {{- if not .Values.autoscaling.faceWorker.enabled }}
+  replicas: {{ .Values.replicaCount.faceWorker }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "recognize.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: face-worker
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "recognize.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: face-worker
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "recognize.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: face-worker
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}-face-worker:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - celery
+        - -A
+        - app.celery_app
+        - worker
+        - --queues=face_detection
+        - --concurrency={{ .Values.celery.workerConcurrency.face }}
+        - --loglevel=info
+        envFrom:
+        - configMapRef:
+            name: {{ include "recognize.fullname" . }}-config
+        - secretRef:
+            name: {{ include "recognize.fullname" . }}-secret
+        resources:
+          {{- toYaml .Values.resources.faceWorker | nindent 12 }}
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/uploads
+        {{- if .Values.persistence.models.enabled }}
+        - name: models
+          mountPath: /app/models
+        {{- end }}
+      volumes:
+      - name: uploads
+        {{- if .Values.persistence.uploads.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ include "recognize.fullname" . }}-uploads
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+      {{- if .Values.persistence.models.enabled }}
+      - name: models
+        persistentVolumeClaim:
+          claimName: {{ include "recognize.fullname" . }}-models
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

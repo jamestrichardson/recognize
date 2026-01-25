@@ -1,0 +1,34 @@
+# ct (chart-testing) configuration
+# Used for testing Helm charts in CI/CD
+---
+# Helm version to use
+helm-version: v3.14.0
+
+# Validate maintainers in Chart.yaml
+# Disabled because it requires GitHub API access and may fail in CI
+validate-maintainers: false
+
+# Check version increments
+check-version-increment: true
+
+# Validate that Chart.yaml contains required fields
+validate-chart-schema: true
+
+# Validate YAML files
+validate-yaml: true
+
+# Additional Helm lint settings
+helm-lint-extra-args: --strict
+
+# Chart directories to test
+chart-dirs:
+  - helm
+
+# Charts to exclude from testing
+excluded-charts: []
+
+# Target branch for comparison
+target-branch: main
+
+# Build dependencies before linting/installing
+build-dependencies: true
