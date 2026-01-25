@@ -8,7 +8,7 @@ python-dotenv>=1.0.0
 
 # Computer Vision
 opencv-python>=4.8.0
-numpy>=1.24.0,<2.0.0
+numpy>=1.24.0,<3.0.0
 
 # Production WSGI Server
 gunicorn>=21.2.0
